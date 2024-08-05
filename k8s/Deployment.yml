@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starter-1
+  labels:
+    app: starter-1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: starter-1
+  template:
+    metadata:
+      labels:
+        app: starter-1
+    spec:
+      containers:
+        - name: starter-1
+          image: sample/starter-1:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: my-app-config
+                  key: spring.datasource.url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: spring.datasource.username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: spring.datasource.password
